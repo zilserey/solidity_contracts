@@ -1,0 +1,120 @@
+
+truffle init
+
+npm init
+
+npm install openzeppelin-solidity@1.12.0
+
+npm install --save-dev dotenv web3 ethereumjs-wallet
+
+GIT_SSH_COMMAND="ssh" npm install --save-dev truffle-wallet-provider
+
+sudo npm install -g truffle@4.1.17
+
+
+
+truffle compile
+
+Compiling ./contracts/Migrations.sol...
+Compiling ./contracts/ZILFaucet.sol...
+Compiling ./contracts/ZILToken.sol...
+Compiling openzeppelin-solidity/contracts/math/SafeMath.sol...
+Compiling openzeppelin-solidity/contracts/token/ERC20/BasicToken.sol...
+Compiling openzeppelin-solidity/contracts/token/ERC20/ERC20.sol...
+Compiling openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol...
+Compiling openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol...
+Writing artifacts to ./build/contracts
+
+
+
+
+truffle migrate --network ganache
+
+Using network 'ganache'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0x127959e0cb8a2ae99523e6df1a6b308c547775b7bda34d377cea204c2a36f60c
+  Migrations: 0xeef5c489a12ba1523c6b6c9886629adb1c0cd3a7
+Saving artifacts...
+Running migration: 2_deploy_contracts.js
+  Deploying ZILToken...
+  ... 0x5003faebfe06ff9e720243f06bbbc7489fc4406fe4447bcb39d2311ea541c60a
+  ZILToken: 0xfdd81c7eaf3e8a2436bb2bd9632a5126128571ae
+  Deploying ZILFaucet...
+  ... 0xd3f8abcd290bb8f6f3f371d611960eeab741e385f9897952796b7ef22dc10110
+  ZILFaucet: 0x793e66ec586431313b859201e48488338376327b
+Saving artifacts...
+
+
+
+
+
+truffle console --network ganache
+
+
+truffle(ganache)> ZILToken
+
+truffle(ganache)> ZILToken.address
+
+'0xfdd81c7eaf3e8a2436bb2bd9632a5126128571ae'
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => instance.totalSupply())
+
+BigNumber { s: 1, e: 9, c: [ 2100000000 ] }
+
+
+
+truffle(ganache)> let accounts
+
+truffle(ganache)> web3.eth.getAccounts((err,res) => { accounts = res })
+
+truffle(ganache)> accounts[0]
+
+'0x33c61ab1b2960e23a242ac62fc99a0f5ab91b7af'
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.balanceOf(accounts[0]).then(console.log) })
+
+BigNumber { s: 1, e: 9, c: [ 2100000000 ] }
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.transfer(accounts[1], 100000) })
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.balanceOf(accounts[0]).then(console.log) })
+
+BigNumber { s: 1, e: 9, c: [ 2099900000 ] }
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.balanceOf(accounts[1]).then(console.log) })
+
+BigNumber { s: 1, e: 5, c: [ 100000 ] }
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.approve(ZILFaucet.address, 100000) })
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.balanceOf(web3.eth.accounts[1]).then(console.log) })
+
+BigNumber { s: 1, e: 5, c: [ 100000 ] }
+
+
+
+truffle(ganache)> ZILFaucet.deployed().then(instance => { instance.withdraw(1000, {from:web3.eth.accounts[1]}) } )
+
+
+
+truffle(ganache)> ZILToken.deployed().then(instance => { instance.balanceOf(web3.eth.accounts[1]).then(console.log) })
+
+BigNumber { s: 1, e: 5, c: [ 101000 ] }
+
+
+
+

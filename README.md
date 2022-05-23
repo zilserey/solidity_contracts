@@ -1,1 +1,1 @@
-A collection of slidity smart contracts written be me
+A collection of slidity smart contracts written by me
